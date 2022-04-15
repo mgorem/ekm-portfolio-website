@@ -1,13 +1,14 @@
-import React from 'react';
+import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
+import { MdClose, MdMenu } from 'react-icons/md';
 
-const NavBarStyles = styled.div`
+const NavBarStyles = styled.nav`
   position: fixed;
   z-index: 100;
   top: 0;
   left: 0;
-  width: 100vw;
+  width: 100%;
   padding: 1rem 0;
   background: var(--dark-bg);
   ul {
@@ -17,44 +18,134 @@ const NavBarStyles = styled.div`
     text-align: center;
     li {
       display: inline-block;
-      align-items: center;
       border-radius: 8px;
       transition: 0.3s ease background-color;
       &:hover {
-        background-color: var(--deep-black);
+        background-color: var(--deep-dark);
       }
     }
     a {
       display: inline-block;
-      font-size: 'RobotoMono Regular';
-      padding: 1rem 1rem;
+      font-family: 'RobotoMono Regular';
+      padding: 1rem 2rem;
       font-size: 2rem;
       color: var(--gray-1);
       outline: none;
     }
+    .active {
+      color: var(--white);
+    }
+  }
+  .mobile-menu-icon {
+    position: absolute;
+    right: 1rem;
+    top: 1rem;
+    width: 3rem;
+    cursor: pointer;
+    display: none;
+    outline: none;
+    * {
+      pointer-events: none;
+    }
+  }
+  .navItems .close-menu-icon {
+    display: none;
+  }
+  @media only screen and (max-width: 768px) {
+    padding: 0;
+    .hide-item {
+      transform: translateY(calc(-100% - var(--top)));
+    }
+    .mobile-menu-icon {
+      display: block;
+    }
+    .navItems {
+      --top: 1rem;
+      transition: 0.3s ease transform;
+      background-color: var(--deep-dark);
+      padding: 2rem;
+      width: 90%;
+      max-width: 200px;
+      border-radius: 12px;
+      position: absolute;
+      right: 1rem;
+      top: var(--top);
+      .close-menu-icon {
+        display: block;
+        width: 3rem;
+        margin: 0 0 0 auto;
+        cursor: pointer;
+        * {
+          pointer-events: none;
+        }
+      }
+      li {
+        display: block;
+        margin-bottom: 1rem;
+      }
+    }
   }
 `;
 
-const NavBar = () => (
-  <NavBarStyles>
-    <ul>
-      <li>
-        <NavLink to="/">Home</NavLink>
-      </li>
-    </ul>
+export default function NavBar() {
+  const [showNav, setShowNav] = useState(false);
+  return (
+    <NavBarStyles>
+      <div
+        className="mobile-menu-icon"
+        onClick={() => setShowNav(!showNav)}
+        role="button"
+        onKeyDown={() => setShowNav(!showNav)}
+        tabIndex={0}
+      >
+        <MdMenu />
+      </div>
 
-    <ul>
-      <li>
-        <NavLink to="/photodecor">PhotoDecor</NavLink>
-      </li>
-    </ul>
-
-    <ul>
-      <li>
-        <NavLink to="/contact">Contact</NavLink>
-      </li>
-    </ul>
-  </NavBarStyles>
-);
-
-export default NavBar;
+      <ul className={!showNav ? 'navItems hide-item' : 'navItems'}>
+        <div
+          className="close-menu-icon"
+          onClick={() => setShowNav(!showNav)}
+          role="button"
+          onKeyDown={() => setShowNav(!showNav)}
+          tabIndex={0}
+        >
+          <MdClose />
+        </div>
+        <li>
+          <NavLink
+            to="/"
+            exact
+            onClick={() => setShowNav(!showNav)}
+            role="button"
+            onKeyDown={() => setShowNav(!showNav)}
+            tabIndex={0}
+          >
+            Home
+          </NavLink>
+        </li>
+        <li>
+          <NavLink
+            to="/photodecor"
+            onClick={() => setShowNav(!showNav)}
+            role="button"
+            onKeyDown={() => setShowNav(!showNav)}
+            tabIndex={0}
+          >
+            PhotoDecor
+          </NavLink>
+        </li>
+        <li>
+          <NavLink
+            to="/contact"
+            onClick={() => setShowNav(!showNav)}
+            role="button"
+            onKeyDown={() => setShowNav(!showNav)}
+            tabIndex={0}
+          >
+            Contact
+          </NavLink>
+        </li>
+      </ul>
+    </NavBarStyles>
+  );
+}
